@@ -1,4 +1,4 @@
-# NOX-Bot
+# NOX [Discord-Bot]
 
 ![npm version](https://img.shields.io/npm/v/node?style=plastic) ![MIT License](https://img.shields.io/github/license/yogeshwar24/blogging_site)  
 
