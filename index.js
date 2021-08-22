@@ -1,10 +1,17 @@
-require('dotenv').config();
-const { Client, Intents, Discord, Message, RichEmbed, MessageEmbed} = require("discord.js");
-const client = new Client({intents: [ Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],});
+require("dotenv").config();
+const {
+  Client,
+  Intents,
+  Discord,
+  Message,
+  RichEmbed,
+  MessageEmbed,
+} = require("discord.js");
+const client = new Client({
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+});
 const fetch = require("node-fetch");
 const { Octokit } = require("octokit");
-
-
 
 const octokit = new Octokit({
   auth: process.env.GIT_TOKEN,
@@ -26,55 +33,54 @@ function embedERROR() {
   return embed;
 }
 
-
 client.on("message", (msg) => {
-  
-  if (msg.author.bot) return;                                                     //If Bot reply's don't read message
-
+  if (msg.author.bot) return;
+  //If Bot reply's don't read message
   else if (msg.content === "$NOX") {
-
-    async function username() {                                                   //To get Master user
+    async function username() {
+      //To get Master user
       const response = await octokit.request("GET /user");
       await msg.channel.send(response.data.login);
     }
 
-    username().catch((res) => {                                                   //Call Function
+    username().catch((res) => {
+      //Call Function
       const embed = embedERROR();
       msg.reply({ embeds: [embed] });
-    })
+    });
   }
 
-  const roleName = msg.member.roles.cache.find(r => r.name === "Master")          //Assign your custom role name how can use the syntex
- 
-  if (msg.content.includes("nox") && roleName != null) {                           //if it has master syntex
+  const roleName = msg.member.roles.cache.find((r) => r.name === "Master"); //Assign your custom role name how can use the syntex
 
-    if (msg.content.includes("-l") && msg.content.split(" ").length - 1 == 2) {    // for if it has -l
+  if (msg.content.includes("nox") && roleName != null) {
+    //if it has master syntex
+
+    if (msg.content.includes("-l") && msg.content.split(" ").length - 1 == 2) {
+      // for if it has -l
 
       const content = msg.content.split(" ");
 
-      async function Allrepo() {
+      const Listrepo = async () => {
         const res = await octokit.request("GET /users/{username}/repos", {
           username: content[2],
         });
-
-        if (res.status == 200) {
-          let str = "";
-          for (let i = 0; i < res.data.length; i++) {
-            str = str + res.data[i].name + "," + `\n`;
-          }
-
-          let embed = new MessageEmbed();
-          embed.setTitle("The repo's are:");
-          embed.setColor(RandomColorPicker());
-          // embed.setAuthor( client.user.username , client.user.displayAvatarURL() )
-          embed.setDescription(str);
-
-          //await console.log(res)
-          await msg.reply({ embeds: [embed] });
+        let str = "";
+        for (let i = 0; i < res.data.length; i++) {
+          str = str + res.data[i].name + "," + `\n`;
         }
-      }
+        const embed = await new MessageEmbed();
+        embed.setTitle("The repo's are:");
+        embed.setColor(RandomColorPicker());
+        // embed.setAuthor( client.user.username , client.user.displayAvatarURL() )
+        embed.setDescription(str);
 
-      Allrepo()                                                         //call Function
+        return embed;
+      };
+
+      Listrepo()
+        .then((embed) => {
+          msg.reply({ embeds: [embed] });
+        })
         .catch((res) => {
           if (res.status == 404) {
             const embed = embedERROR();
@@ -85,134 +91,135 @@ client.on("message", (msg) => {
             msg.reply({ embeds: [embed] });
           }
         });
-    }
-
-    else if (msg.content.includes("-b") && msg.content.split(" ").length - 1 == 3 ) {     // to get the branches of repo of any user
+    } 
+    else if ( msg.content.includes("-b") && msg.content.split(" ").length - 1 == 3) {   // to get the branches of repo of any user
 
       const content = msg.content.split(" ");
 
-      async function DisplayBranches() {
-        const res = await octokit.request(
-          "GET /repos/{owner}/{repo}/branches",
-          {
-            owner: content[2],
-            repo: content[3],
-          }
-        );
+     const DisplayBranches = async () => {
 
-        if (res.status == 200) {
-          let str = "";
-          for (let i = 0; i < res.data.length; i++) {
-            str = str + res.data[i].name + "," + `\n`;
-          }
-
-          let embed = new MessageEmbed();
-          embed.setTitle("The branches are:");
-          embed.setColor(RandomColorPicker());
-          embed.setAuthor(client.user.username, client.user.displayAvatarURL());
-          embed.setDescription(str);
-          await msg.reply({ embeds: [embed] });
+      const res = await octokit.request(
+        "GET /repos/{owner}/{repo}/branches",
+        {
+          owner: content[2],
+          repo: content[3],
         }
+      );
+
+      let str = "";
+      for (let i = 0; i < res.data.length; i++) {
+        str = str + res.data[i].name + "," + `\n`;
       }
 
-      DisplayBranches()                                                 //call Function
-       .catch((res) => {
-          if (res.status == 404) {
-            const embed = embedERROR();
-            embed.setDescription("User not found");
-            msg.reply({ embeds: [embed] });
-          } else {
-            const embed = embedERROR();
-            msg.reply({ embeds: [embed] });
-          }
-        });
-    }
+      let embed = await new MessageEmbed();
+      embed.setTitle("The branches are:");
+      embed.setColor(RandomColorPicker());
+      embed.setAuthor(client.user.username, client.user.displayAvatarURL());
+      embed.setDescription(str);
+      return embed;
+     }
 
-    else if (msg.content.includes("-p") && msg.content.split(" ").length - 1 == 2){       // to display profile card of user
+     DisplayBranches()
+     .then((embed) => {
+        msg.reply({ embeds: [embed] });
+     })
+     .catch((res) => {
+      if (res.status == 404) {
+        const embed = embedERROR();
+        embed.setDescription("Repo not found");
+        msg.reply({ embeds: [embed] });
+      } else {
+        const embed = embedERROR();
+        msg.reply({ embeds: [embed] });
+      }
+    });
+   }
+    
+    else if ( msg.content.includes("-p") && msg.content.split(" ").length - 1 == 2 ) {      // to display profile card of user
 
-     const content = msg.content.split(" ");
+      const content = msg.content.split(" ");
 
-      async function ProfileCard() {
+      const ProfileCard = async () => {
+
         const res = await octokit.request("GET /users/{username}", {
           username: content[2],
         });
 
-        if (res.status == 200) {
-          const exampleEmbed = new MessageEmbed();
-          if (res.data.name != null) {
-            exampleEmbed.setTitle(res.data.name);
-          }
-          exampleEmbed.setColor(RandomColorPicker());
-         
-          if(res.data.bio != null) exampleEmbed.setDescription(res.data.login + "\n" + res.data.bio);
-          else{
-            exampleEmbed.setDescription(res.data.login)
-          }
+        const exampleEmbed = await new MessageEmbed();
 
-          if(res.data.email != null){
-              exampleEmbed.addFields({
-                name: "Email",
-                value: res.data.email,
-              })}
-          exampleEmbed.setThumbnail(res.data.avatar_url);
+        if (res.data.name != null) {
+          exampleEmbed.setTitle(res.data.name);
+        }
+        exampleEmbed.setColor(RandomColorPicker());
+
+        if (res.data.bio != null)
+          exampleEmbed.setDescription(res.data.login + "\n" + res.data.bio);
+        else {
+          exampleEmbed.setDescription(res.data.login);
+        }
+
+        if (res.data.email != null) {
           exampleEmbed.addFields({
-            name: "Link to profile",
-            value: res.data.html_url,
+            name: "Email",
+            value: res.data.email,
           });
-          if(res.data.blog != ""){
+        }
+        exampleEmbed.setThumbnail(res.data.avatar_url);
+        exampleEmbed.addFields({
+          name: "Link to profile",
+          value: res.data.html_url,
+        });
+        if (res.data.blog != "") {
           exampleEmbed.addFields({
             name: "Link to Project",
             value: res.data.blog,
-          })}
-          if(res.data.twitter_username != null){
-            exampleEmbed.addFields({
-              name: "Twitter",
-              value: res.data.twitter_username,
-            })}
-          exampleEmbed.addFields(
-            {
-              name: "Followers",
-              value: res.data.followers.toString(),
-              inline: true,
-            },
-            {
-              name: "Following",
-              value: res.data.following.toString(),
-              inline: true,
-            },
-            {
-              name: "Public repo",
-              value: res.data.public_repos.toString(),
-              inline: true,
-            }
-          );
-          exampleEmbed.setTimestamp();
-
-          await msg.reply({ embeds: [exampleEmbed] });
-          await console.log(res)
+          });
         }
+        if (res.data.twitter_username != null) {
+          exampleEmbed.addFields({
+            name: "Twitter",
+            value: res.data.twitter_username,
+          });
+        }
+        exampleEmbed.addFields(
+          {
+            name: "Followers",
+            value: res.data.followers.toString(),
+            inline: true,
+          },
+          {
+            name: "Following",
+            value: res.data.following.toString(),
+            inline: true,
+          },
+          {
+            name: "Public repo",
+            value: res.data.public_repos.toString(),
+            inline: true,
+          }
+        );
+        exampleEmbed.setTimestamp();
+
+        return exampleEmbed;
       }
 
-
-      ProfileCard()                                                //call Function
-       .catch((res) => {
-          if (res.status == 404) {
-            const embed = embedERROR();
-            embed.setDescription("User not found");
-            msg.reply({ embeds: [embed] });
-          } else {
-            const embed = embedERROR();
-            msg.reply({ embeds: [embed] });
-          }
-        })} 
-
-    else {
-      const embed = embedERROR();
-      msg.channel.send({ embeds: [embed] });
-    }
+      ProfileCard()
+      .then((embed) => {
+        msg.reply({ embeds: [embed] });
+      })
+      .catch((res) => {
+        if (res.status == 404) {
+          const embed = embedERROR();
+          embed.setDescription("User not found");
+          msg.reply({ embeds: [embed] });
+        } else {
+          const embed = embedERROR();
+          msg.reply({ embeds: [embed] });
+        }
+      });
 
   }
-
+}
 });
 
 client.login(process.env.Discord_token);
