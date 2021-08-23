@@ -1,1 +1,3 @@
 language: Node  
+node_js:
+- lts/*
