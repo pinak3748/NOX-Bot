@@ -1,6 +1,7 @@
 # NOX [Discord-Bot]
 
-![npm version](https://img.shields.io/npm/v/node?style=plastic) ![MIT License](https://img.shields.io/github/license/yogeshwar24/blogging_site)  
+![npm version](https://img.shields.io/npm/v/node?style=plastic) ![MIT License](https://img.shields.io/github/license/yogeshwar24/blogging_site) ![npm version](https://app.travis-ci.com/pinak3748/NOX-Bot.svg?branch=master)
+
 
 Discord bot for simple use of GitHub using  :octocat:octocat
 
