@@ -44,6 +44,6 @@ Commands to use it:
 Its has master syntex `NOX` which is prefix for commands
 
  - `$NOX` to get the name of Authorised user
- - `nox -l {username}` to list all the repo of following user
+ - `nox -l {username}` to list all the repo's of following user
  - `nox -b {username} {repo}` to list all branches all branches in repo
  - `nox -p {username}` to get a profile card of user
