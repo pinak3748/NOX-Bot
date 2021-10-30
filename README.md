@@ -1,6 +1,7 @@
 # NOX [Discord-Bot]
 
-![npm version](https://img.shields.io/npm/v/node?style=plastic) ![MIT License](https://img.shields.io/github/license/yogeshwar24/blogging_site)  
+![npm version](https://img.shields.io/npm/v/node?style=plastic) ![MIT License](https://img.shields.io/github/license/yogeshwar24/blogging_site) ![npm version](https://app.travis-ci.com/pinak3748/NOX-Bot.svg?branch=master)
+
 
 Discord bot for simple use of GitHub using  :octocat:octocat
 
@@ -43,6 +44,6 @@ Commands to use it:
 Its has master syntex `NOX` which is prefix for commands
 
  - `$NOX` to get the name of Authorised user
- - `nox -l {username}` to list all the repo of following user
+ - `nox -l {username}` to list all the repo's of following user
  - `nox -b {username} {repo}` to list all branches all branches in repo
  - `nox -p {username}` to get a profile card of user
